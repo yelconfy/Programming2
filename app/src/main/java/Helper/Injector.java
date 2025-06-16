@@ -1,26 +1,28 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Helper;
 
-import Interface.ICSVReader;
+import Forms.PayrollForm;
+import Interface.ICSVFileReader;
 import Interface.ILogInProcess;
+import Interface.IPayrollProcess;
+import Processes.LogInProcess;
+import Processes.PayrollProcess;
 import com.example.S1101.project.HomePage;
-import com.example.S1101.project.LogInProcess;
 
-/**
- *
- * @author eyell
- */
 public class Injector {
-     public static HomePage createHomePage() {
+
+    public static HomePage createHomePage() {
         ILogInProcess loginProcess = createLoginProcess();
         return new HomePage(loginProcess);
     }
-    
+
+    public static PayrollForm createPayrollForm() {
+        ICSVFileReader csvReader = new CSVFileReader();
+        IPayrollProcess payrollProcess = new PayrollProcess(csvReader); // ✅ use process, not reader
+        return new PayrollForm(payrollProcess); // ✅ pass the process, not reader
+    }
+
     public static ILogInProcess createLoginProcess() {
-        ICSVReader csvReader = new CSVReader();
-        return new LogInProcess(csvReader); 
+        ICSVFileReader csvReader = new CSVFileReader();
+        return new LogInProcess(csvReader);
     }
 }

@@ -4,7 +4,9 @@
 [versions]
 guava = "33.2.1-jre"
 junit-jupiter = "5.10.3"
+opencsv = "5.9"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+opencsv = { module = "com.opencsv:opencsv", version.ref = "opencsv" }

@@ -2,11 +2,11 @@
 package Objects.models;
 
 public class Credentials {
-    String UserName;
-    String Password;
-    String DeptCode;
-    String FirstName;
-    String LastName;
+    private String UserName;
+    private String Password;
+    private String DeptCode;
+    private String FirstName;
+    private String LastName;
     
     // Constructor
     public Credentials(String userName, String password, String deptCode, String firstName, String lastName) {
