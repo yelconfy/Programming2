@@ -1,6 +1,7 @@
 package Objects.models;
 
 import Helper.AmountUtil;
+import Helper.DateTimeUtil;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -31,7 +32,7 @@ public class EmpDetail extends EmployeeInfo {
             String empNo,
             String lastName,
             String firstName,
-            String birthday,
+            LocalDate birthday,
             AddressInfo address,
             String email,
             String phoneNo,
@@ -43,7 +44,8 @@ public class EmpDetail extends EmployeeInfo {
             String position,
             String immSupervisor,
             CompensationInfo compensation,
-            LocalDate dateHired
+            LocalDate dateHired,
+            boolean status
     ) {
         super(empNo, lastName, firstName, birthday, address);
         this.Email = email;
@@ -57,6 +59,7 @@ public class EmpDetail extends EmployeeInfo {
         this.ImmSupervisor = immSupervisor;
         this.Compensation = compensation;
         this.DateHired = dateHired;
+        this.SetStatus(status);
     }
     // </editor-fold>
 
@@ -158,49 +161,49 @@ public class EmpDetail extends EmployeeInfo {
             throw new IllegalArgumentException("Invalid CSV row: expected 27 fields");
         }
 
-        // Base info
+        // Personal Details
         String empNo = data[0];
         String lastName = data[1];
         String firstName = data[2];
-        String birthday = data[3];
+        LocalDate birthday = DateTimeUtil.parseDate(data[3]);
+        String email = data[4];
+        String phoneNo = data[5];
 
-        // Address info
+        // Address Details
         AddressInfo address = new AddressInfo(empNo);
-        address.SetHouseBlkLotNo(data[4]);
-        address.SetStreet(data[5]);
-        address.SetBarangay(data[6]);
-        address.SetCityMunicipality(data[7]);
-        address.SetProvince(data[8]);
-        address.SetZipCode(data[9]);
+        address.SetHouseBlkLotNo(data[6]);
+        address.SetStreet(data[7]);
+        address.SetBarangay(data[8]);
+        address.SetCityMunicipality(data[9]);
+        address.SetProvince(data[10]);
+        address.SetZipCode(data[11]);
 
-        // Contact & IDs
-        String phoneNo = data[10];
-        String email = data[11];
+        // Statutory Details
         String sssNo = data[12];
         String philHealthNo = data[13];
         String tinNo = data[14];
         String pagIbigNo = data[15];
+
+        // Employement Details
         String empStatus = data[16];
         String position = data[17];
         String immSupervisor = data[18];
+        LocalDate dateHired = DateTimeUtil.parseDate(data[19]);
 
-        // Compensation
+        // Compensation Details
         CompensationInfo compensation = new CompensationInfo(empNo);
-        compensation.SetBasicSalary(AmountUtil.ParseFormattedDouble(data[19]));
-        compensation.SetRiceSubsidy(AmountUtil.ParseFormattedDouble(data[20]));
-        compensation.SetPhoneAllowance(AmountUtil.ParseFormattedDouble(data[21]));
-        compensation.SetClothingAllowance(AmountUtil.ParseFormattedDouble(data[22]));
-        compensation.SetGrossSemiMonthlyRate(AmountUtil.ParseFormattedDouble(data[23]));
-        compensation.SetHourlyRate(AmountUtil.ParseFormattedDouble(data[24]));
-
-        // Date hired
-        LocalDate dateHired = LocalDate.parse(data[25]);
+        compensation.SetBasicSalary(AmountUtil.ParseFormattedStringToDouble(data[20]));
+        compensation.SetRiceSubsidy(AmountUtil.ParseFormattedStringToDouble(data[21]));
+        compensation.SetPhoneAllowance(AmountUtil.ParseFormattedStringToDouble(data[22]));
+        compensation.SetClothingAllowance(AmountUtil.ParseFormattedStringToDouble(data[23]));
+        compensation.SetGrossSemiMonthlyRate(AmountUtil.ParseFormattedStringToDouble(data[24]));
+        compensation.SetHourlyRate(AmountUtil.ParseFormattedStringToDouble(data[25]));
 
         // Status
         boolean status = Boolean.parseBoolean(data[26]);
 
         // Create and set status
-        EmpDetail emp = new EmpDetail(
+        return new EmpDetail(
                 empNo,
                 lastName,
                 firstName,
@@ -216,11 +219,9 @@ public class EmpDetail extends EmployeeInfo {
                 position,
                 immSupervisor,
                 compensation,
-                dateHired
+                dateHired,
+                status
         );
-
-        emp.SetStatus(status);
-        return emp;
     }
     // </editor-fold>
 
@@ -244,7 +245,7 @@ public class EmpDetail extends EmployeeInfo {
 
     public Object GetDisplayFieldValue(int index) {
         try {
-            Field field = EmpDetail.class.getDeclaredField(DISPLAY_FIELDS[index]);
+            Field field = GetFieldRecursive(this.getClass(), DISPLAY_FIELDS[index]);
             field.setAccessible(true);
             return field.get(this);
         } catch (Exception e) {
@@ -252,6 +253,16 @@ public class EmpDetail extends EmployeeInfo {
             return null;
         }
     }
+
+    private Field GetFieldRecursive(Class<?> clazz, String name) throws NoSuchFieldException {
+        while (clazz != null) {
+            try {
+                return clazz.getDeclaredField(name);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(name);
+    }
     // </editor-fold>
 }
-

@@ -8,11 +8,11 @@ public class AddressInfo extends BaseEmployeeInfo {
     private String CityMunicipality;
     private String Province;
     private String ZipCode;
-
+    
     public AddressInfo(String empNo) {
         super(empNo);
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="Getters">
     public String GetHouseBlkLotNo() {
         return HouseBlkLotNo;

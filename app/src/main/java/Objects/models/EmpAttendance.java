@@ -3,16 +3,14 @@ package Objects.models;
 import Helper.AmountUtil;
 import Helper.DateTimeUtil;
 import static Objects.models.EmpAttendance.DISPLAY_FIELDS;
+import static Objects.models.EmpDetail.DISPLAY_FIELDS;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 
-public class EmpAttendance {
+public class EmpAttendance extends EmployeeInfo {
 
-    private String EmpNo;
-    private String LastName;
-    private String FirstName;
     private LocalDate BizDate;
     private LocalTime LogInTime;
     private LocalTime LogOutTime;
@@ -31,13 +29,13 @@ public class EmpAttendance {
             String empNo,
             String lastName,
             String firstName,
+            LocalDate birthday,
+            AddressInfo address,
             LocalDate bizDate,
             LocalTime logInTime,
             LocalTime logOutTime
     ) {
-        this.EmpNo = empNo;
-        this.LastName = lastName;
-        this.FirstName = firstName;
+        super(empNo, lastName, firstName, birthday, address);
         this.BizDate = bizDate;
         this.LogInTime = logInTime;
         this.LogOutTime = logOutTime;
@@ -45,84 +43,72 @@ public class EmpAttendance {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getters">
-    public String getEmpNo() {
-        return EmpNo;
-    }
-
-    public String getLastName() {
-        return LastName;
-    }
-
-    public String getFirstName() {
-        return FirstName;
-    }
-
-    public LocalDate getBizDate() {
+    public LocalDate GetBizDate() {
         return BizDate;
     }
 
-    public LocalTime getLogInTime() {
+    public LocalTime GetLogInTime() {
         return LogInTime;
     }
 
-    public LocalTime getLogOutTime() {
+    public LocalTime GetLogOutTime() {
         return LogOutTime;
     }
-
     // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Setters">
-    public void setEmpNo(String empNo) {
-        this.EmpNo = empNo;
-    }
-
-    public void setLastName(String lastName) {
-        this.LastName = lastName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.FirstName = firstName;
-    }
-
-    public void setBizDate(LocalDate bizDate) {
+    public void SetBizDate(LocalDate bizDate) {
         this.BizDate = bizDate;
     }
 
-    public void setLogInTime(LocalTime logInTime) {
+    public void SetLogInTime(LocalTime logInTime) {
         this.LogInTime = logInTime;
     }
 
-    public void setLogOutTime(LocalTime logOutTime) {
+    public void SetLogOutTime(LocalTime logOutTime) {
         this.LogOutTime = logOutTime;
     }
     // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Utility">
-    public static EmpAttendance fromArray(String[] data) {
+    public static EmpAttendance FromArray(String[] data) {
         if (data.length < 6) {
-            throw new IllegalArgumentException("Invalid CSV row");
+            throw new IllegalArgumentException("Invalid CSV row: expected 6 fields");
         }
+
+        String empNo = data[0];
+        String lastName = data[1];
+        String firstName = data[2];
+
+        // If attendance file does NOT have birthday/address, supply defaults.
+        LocalDate birthday = null; // or "" if you prefer
+        AddressInfo address = null; // or new AddressInfo(empNo) with blanks
+
+        LocalDate bizDate = DateTimeUtil.parseDate(data[3]);
+        LocalTime logInTime = DateTimeUtil.parseTime(data[4]);
+        LocalTime logOutTime = DateTimeUtil.parseTime(data[5]);
+
         return new EmpAttendance(
-                data[0],
-                data[1],
-                data[2],
-                DateTimeUtil.parseDate(data[3]),
-                DateTimeUtil.parseTime(data[4]),
-                DateTimeUtil.parseTime(data[5])
+                empNo,
+                lastName,
+                firstName,
+                birthday,
+                address,
+                bizDate,
+                logInTime,
+                logOutTime
         );
     }
 
-    // Get field names dynamically
     public static String[] GetFieldNames() {
-        return Arrays.stream(EmpAttendance.class.getDeclaredFields())
+        return Arrays.stream(EmpDetail.class.getDeclaredFields())
                 .map(Field::getName)
                 .toArray(String[]::new);
     }
 
-    // Get values dynamically
     public Object GetFieldValue(int index) {
         try {
-            Field field = EmpAttendance.class.getDeclaredFields()[index];
+            Field field = EmpDetail.class.getDeclaredFields()[index];
             field.setAccessible(true);
             return field.get(this);
         } catch (IllegalAccessException e) {
@@ -131,15 +117,26 @@ public class EmpAttendance {
         }
     }
 
-    public Object getDisplayFieldValue(int index) {
+    public Object GetDisplayFieldValue(int index) {
         try {
-            Field field = EmpAttendance.class.getDeclaredField(DISPLAY_FIELDS[index]);
+            Field field = GetFieldRecursive(this.getClass(), DISPLAY_FIELDS[index]);
             field.setAccessible(true);
             return field.get(this);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private Field GetFieldRecursive(Class<?> clazz, String name) throws NoSuchFieldException {
+        while (clazz != null) {
+            try {
+                return clazz.getDeclaredField(name);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(name);
     }
     // </editor-fold>
 }

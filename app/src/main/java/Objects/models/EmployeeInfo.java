@@ -1,19 +1,23 @@
 package Objects.models;
 
+import java.time.LocalDate;
+
 public class EmployeeInfo extends BaseEmployeeInfo {
 
     private String LastName;
     private String FirstName;
-    private String Birthday;
+    private LocalDate Birthday;
     private AddressInfo Address;
 
-    public EmployeeInfo(String empNo, String lastName, String firstName, String birthday, AddressInfo address) {
-        super(empNo);
+    // <editor-fold defaultstate="collapsed" desc="Constructors">
+    public EmployeeInfo(String empNo, String lastName, String firstName, LocalDate birthday, AddressInfo address) {
+        super(empNo);  
         this.LastName = lastName;
         this.FirstName = firstName;
         this.Birthday = birthday;
         this.Address = address;
     }
+    // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Getters">
     public String GetLastName() {
@@ -24,7 +28,7 @@ public class EmployeeInfo extends BaseEmployeeInfo {
         return FirstName;
     }
 
-    public String GetBirthday() {
+    public LocalDate GetBirthday() {
         return Birthday;
     }
 
@@ -42,7 +46,7 @@ public class EmployeeInfo extends BaseEmployeeInfo {
         this.FirstName = firstName;
     }
 
-    public void SetBirthday(String birthday) {
+    public void SetBirthday(LocalDate birthday) {
         this.Birthday = birthday;
     }
 

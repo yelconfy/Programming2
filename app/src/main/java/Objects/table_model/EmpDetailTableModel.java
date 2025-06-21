@@ -11,7 +11,7 @@ public class EmpDetailTableModel extends AbstractTableModel {
     public EmpDetailTableModel(List<EmpDetail> _pageData) {
         this.pageData = _pageData;
     }
-
+    
     public void setPageData(List<EmpDetail> _pageData) {
         this.pageData = _pageData;
         fireTableDataChanged(); // refresh table
@@ -24,17 +24,16 @@ public class EmpDetailTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return EmpDetail.DISPLAY_FIELDS.length;
+       return EmpDetail.DISPLAY_FIELDS.length;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-//        return pageData.get(rowIndex).getDisplayFieldValue(columnIndex);
-        return null;
+        return pageData.get(rowIndex).GetDisplayFieldValue(columnIndex);
     }
 
     @Override
     public String getColumnName(int column) {
-        return EmpDetail.DISPLAY_FIELDS[column];
+         return EmpDetail.DISPLAY_FIELDS[column];
     }
 }

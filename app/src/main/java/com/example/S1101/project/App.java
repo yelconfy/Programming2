@@ -3,8 +3,6 @@
  */
 package com.example.S1101.project;
 
-import Forms.EmpMgmtForm;
-import Forms.TimeKeepingForm;
 import Helper.Injector;
 
 public class App {
@@ -12,8 +10,5 @@ public class App {
     public static void main(String[] args) {
         HomePage homePage = Injector.createHomePage();
         homePage.setVisible(true);
-
-//        EmpMgmtForm asd = new EmpMgmtForm();
-//        asd.setVisible(true);
     }
 }

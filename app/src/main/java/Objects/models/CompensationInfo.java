@@ -12,7 +12,7 @@ public class CompensationInfo extends BaseEmployeeInfo {
     public CompensationInfo(String empNo) {
         super(empNo);
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="Getters">
     public double GetBasicSalary() {
         return BasicSalary;
@@ -37,7 +37,7 @@ public class CompensationInfo extends BaseEmployeeInfo {
     public double GetHourlyRate() {
         return HourlyRate;
     }
-     // </editor-fold>
+    // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Setters">
     public void SetBasicSalary(double basicSalary) {
@@ -63,5 +63,5 @@ public class CompensationInfo extends BaseEmployeeInfo {
     public void SetHourlyRate(double hourlyRate) {
         this.HourlyRate = hourlyRate;
     }
-     // </editor-fold>
+    // </editor-fold>
 }

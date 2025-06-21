@@ -11,4 +11,5 @@ public interface ICSVFileReader {
     List<Credentials> Getcred();
     List<EmpDetail> GetEmpDeets();
     List<EmpAttendance> GetEmpAttendance(Optional<String> empNo, Optional<LocalDate> fromDate, Optional<LocalDate> toDate);
+    boolean WriteToEmpDetailsCSV(List<EmpDetail> allEmployees);
 }

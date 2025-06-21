@@ -10,7 +10,7 @@ public class AmountUtil {
      * @param input the formatted string
      * @return the double value
      */
-    public static double ParseFormattedDouble(String input) {
+    public static double ParseFormattedStringToDouble(String input) {
         if (input == null || input.isEmpty()) {
             return 0.0; // or throw exception, up to you
         }
